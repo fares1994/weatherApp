@@ -10,7 +10,7 @@ const DUMMY_WEATHER_DATA = {
     tempF: 70, 
     date: '7/2/2021',
     placeName: 'name',
-    observationDate:'23:23',
+    observationTime:'23:23',
     day:'sunday'
 }
 const useStyles = makeStyles((theme) => ({
@@ -32,13 +32,6 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    stateIcon:{
-        width:'10rem',
-        height:'10rem'
-    },
-    iconContainer:{
-        margin:'3rem'
-    },
     submit:{
         margin:'5px'
     }
@@ -47,6 +40,7 @@ const UserPage = () =>{
     const classes = useStyles();
     const [place,setPlace] = useState('')
     const [error,setError] = useState(false)
+    const [data,setData] = useState(null)
     const inputHandler = event =>{
         setPlace(event)
     }
@@ -54,52 +48,42 @@ const UserPage = () =>{
         event.preventDefault();
         if(place.length===0){
             return setError('please enter a place')
-        }
+        } 
         console.log(place)
-        //to be fetched.....
+        // then fetch
+        setData(DUMMY_WEATHER_DATA)
+        // handle error later
     }
     const clearError = () =>{
         setError(false)
     }
    return(
-       <div className={classes.userpage_container}>
-           <ErrorModal 
-           error={error} 
-           onClear={clearError} 
-           />
-        <h1 className={classes.heading}>Welcome username</h1>
-        <form className={classes.form} 
-        noValidate 
-        autoComplete="off"
-        onSubmit={handleSearch}>
-        <TextField 
-        id="outlined-basic" 
-        label="place-name" 
-        variant="outlined" 
-        onChange={inputHandler}
-        />
-        <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            >
-                Search
-       </Button>
-        </form>
-        <div className={classes.info}>
-          <div className={classes.iconContainer}>
-             <WbSunnyIcon className={classes.stateIcon}/>
-          </div>
-        <div className={classes.details}>
-           <h3>amman</h3>
-           <div>sunday 9:30</div>
-           <div>weather state</div>
-           <div className={classes.temp}>
-               add temp component
-            </div>
-        </div>
-        </div>
+        <div className={classes.userpage_container}>
+            <ErrorModal 
+            error={error} 
+            onClear={clearError} 
+            />
+            <h1 className={classes.heading}>Welcome username</h1>
+            <form className={classes.form} 
+            noValidate 
+            autoComplete="off"
+            onSubmit={handleSearch}>
+            <TextField 
+            id="outlined-basic" 
+            label="place-name" 
+            variant="outlined" 
+            onChange={inputHandler}
+            />
+            <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                >
+                    Search
+             </Button>
+            </form>
+             
        </div>
    )
 }

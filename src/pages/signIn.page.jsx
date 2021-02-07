@@ -43,7 +43,7 @@ const SignIn = () =>{
       username:'',
       password:''
   })
-  const [error,setError] = useState(false)
+  const [error,setError] = useState('')
   const [isLoading,setIsLoading] = useState(false)
 
   const formHandler = event =>{
@@ -55,12 +55,12 @@ const SignIn = () =>{
 }
 const submitHandler = async event =>{
     event.preventDefault();
-    console.log(event);
+
     if(form.username.length===0||form.password.length===0){
        return setError('please complete form')
     }
     try{
-       const token = await fetch('http://localhost:3001/signin',
+       const res = await fetch('http://localhost:3001/signin',
        {
          method:'POST',
         headers:{
@@ -68,10 +68,16 @@ const submitHandler = async event =>{
          },
          body:JSON.stringify(form)
        })
-       console.log(form.username,token)
-       return auth.login(form.username,token)
+        if(!res.ok){
+          throw new Error('credintials are not correct')
+        }
+       const token = (await res.json()).token
+
+       auth.login(form.username,token)
+       return localStorage.setItem('token',token)
     }catch(err){
-      setError(err)
+      
+      setError(err.message)
     }
 
     //ready to send (form)

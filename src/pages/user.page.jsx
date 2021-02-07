@@ -1,10 +1,13 @@
-import React,{useState} from 'react';
+import React,{useState,useContext} from 'react';
 import './user.style.css'
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ErrorModal from '../components/ui-elements/ErrorModal';
 import WeatherDetails from '../components/weather-details/weather-details';
+import {AuthContext} from '../context/auth-context';
+
+
 const DUMMY_WEATHER_DATA = {
     weatherState:'sunny',
     tempF: 70, 
@@ -41,18 +44,32 @@ const UserPage = () =>{
     const [place,setPlace] = useState('')
     const [error,setError] = useState(false)
     const [data,setData] = useState({})
+    const auth = useContext(AuthContext);
     const inputHandler = event =>{
-        setPlace(event)
+        setPlace(event.target.value)
     }
-    const handleSearch = event =>{
+    const handleSearch = async event =>{
         event.preventDefault();
         if(place.length===0){
             return setError('please enter a place')
-        } 
-        console.log(place)
-        // then fetch
-        setData(DUMMY_WEATHER_DATA)
-        // handle error later
+        }
+        try{
+          const res = await fetch(`http://localhost:3001/weather?city=${place}`)
+          if(!res.ok){
+              throw new Error('can not fetch from database')
+          }
+          const obj = await res.json()
+          console.log(obj)
+          const STATES = ['sunny','cloudy',]
+
+          setData(obj)
+        }catch(err){
+           setError(err.message)
+        }
+    }
+    const logOutHandler = () =>{
+        auth.logout()
+        localStorage.clear()
     }
     const clearError = () =>{
         setError(false)
@@ -64,6 +81,7 @@ const UserPage = () =>{
             onClear={clearError} 
             />
             <h1 className={classes.heading}>Welcome username</h1>
+            <Button onClick={logOutHandler}>Log Out</Button>
             <form className={classes.form} 
             noValidate 
             autoComplete="off"
@@ -86,15 +104,14 @@ const UserPage = () =>{
             {
                 Object.keys(data).length === 0? <div>please select a place</div> 
                 :<WeatherDetails
-                   place={data.placeName}
-                   time={data.observationTime}
-                   temp={data.tempF}
-                   state={data.weatherState}
+                   place={data.name}
+                   time={data.obTime}
+                   temp={data.temperature}
+                   state={data.state}
                    day={data.day}
                 />
             }
        </div>
    )
 }
-
 export default UserPage;

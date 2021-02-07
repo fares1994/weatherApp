@@ -12,7 +12,7 @@ import User from './pages/user.page';
 import {AuthContext} from './context/auth-context';
 
 const App = () => {
-  const [token, setToken] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [username, setUserName] = useState('');
   
   const login = useCallback((username,token) => {

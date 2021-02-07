@@ -53,8 +53,9 @@ const [isLoading,setIsLoading] = useState(false)
    const clearError = () =>{
     setError(null)
 }
-   const submitHandler = event =>{
+   const submitHandler = async event =>{
     event.preventDefault();
+    console.log(form)
     console.log(event);
     if(form.username.length===0||form.password.length===0||form.confirm_password===0){
         return setError('please complete the form')
@@ -62,10 +63,26 @@ const [isLoading,setIsLoading] = useState(false)
     if(form.password!==form.confirm_password){
         return setError(`passwords doesn't match`)
     }
+    try{
+      const token = await fetch('http://localhost:3001/signup',
+      {
+        method:'POST',
+       headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          username:form.username,
+          password: form.password
+        })
+      })
+      console.log(form.username,token)
+     return auth.login(form.username,token)
+   }catch(err){
+     setError(err)
+   }
     //ready to send (form)
     //ready to send (form)
     //remember to add the error modal and isloading modal
-    auth.login(DUMMY_USER.username,DUMMY_USER.token)
   }
   return (
     <React.Fragment>
@@ -113,7 +130,7 @@ const [isLoading,setIsLoading] = useState(false)
               margin="normal"
               required
               fullWidth
-              name="confirm-password"
+              name="confirm_password"
               label="confirm-Password"
               type="password"
               id="confirm-password"

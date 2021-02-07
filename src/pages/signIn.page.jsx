@@ -53,15 +53,29 @@ const SignIn = () =>{
    const clearError = () =>{
     setError(null)
 }
-const submitHandler = event =>{
+const submitHandler = async event =>{
     event.preventDefault();
     console.log(event);
     if(form.username.length===0||form.password.length===0){
        return setError('please complete form')
     }
+    try{
+       const token = await fetch('http://localhost:3001/signin',
+       {
+         method:'POST',
+        headers:{
+           'Content-Type':'application/json'
+         },
+         body:JSON.stringify(form)
+       })
+       console.log(form.username,token)
+       return auth.login(form.username,token)
+    }catch(err){
+      setError(err)
+    }
+
     //ready to send (form)
     //remember to add the error modal and isloading modal
-    auth.login(DUMMY_USER.username,DUMMY_USER.token)
   }
   return (
       <React.Fragment>

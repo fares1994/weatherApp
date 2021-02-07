@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useContext} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,7 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {Link} from 'react-router-dom';
-
+import {AuthContext} from '../context/auth-context';
+const DUMMY_USER ={
+    username:'fares',
+    token:'123123'
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignUp = () =>{
   const classes = useStyles();
+  const auth = useContext(AuthContext);
   const [form,setForm] = useState({
     username:'',
     password:''
@@ -47,6 +52,7 @@ const SignUp = () =>{
         alert('please complete form')
     }
     //ready to send (form)
+    auth.login(DUMMY_USER.username,DUMMY_USER.token)
   }
   return (
     <Container component="main" maxWidth="xs">

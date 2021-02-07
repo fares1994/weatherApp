@@ -9,7 +9,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {Link} from 'react-router-dom';
 import {AuthContext} from '../context/auth-context';
-import {validate} from '../utils/validators';
+import ErrorModal from '../components/ui-elements/ErrorModal';
+import LoadingSpinner from '../components/ui-elements/LoadingSpinner';
+
 const DUMMY_USER ={
     username:'fares',
     token:'123123'
@@ -41,72 +43,84 @@ const SignIn = () =>{
       username:'',
       password:''
   })
+  const [error,setError] = useState(false)
+  const [isLoading,setIsLoading] = useState(false)
+
   const formHandler = event =>{
     const input = event.target
     setForm({...form,[input.name]:input.value})
    }
-  const submitHandler = event =>{
+   const clearError = () =>{
+    setError(null)
+}
+const submitHandler = event =>{
     event.preventDefault();
     console.log(event);
     if(form.username.length===0||form.password.length===0){
-        alert('please complete form')
-        return
+       return setError('please complete form')
     }
     //ready to send (form)
-    console.log('dd')
     auth.login(DUMMY_USER.username,DUMMY_USER.token)
   }
   return (
+      <React.Fragment>
+      <ErrorModal error={error} 
+        onClear={clearError} 
+      />
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate
-         onSubmit={submitHandler}>
-        <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="User Name"
-            name="username"
-            autoComplete="username"
-            autoFocus
-            onChange={formHandler}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={formHandler}
-          />
+           {isLoading && <LoadingSpinner asOverlay />}   
+        <CssBaseline />
+        <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+            Sign in
+            </Typography>
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-          <Link to='/signup'>SignUp</Link>
-        </form>
-      </div>
- 
-    </Container>
+            <form className={classes.form} noValidate
+            onSubmit={submitHandler}>
+            <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="User Name"
+                name="username"
+                autoComplete="username"
+                autoFocus
+                onChange={formHandler}
+            />
+            <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={formHandler}
+            />
+
+            <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+            >
+                Sign In
+            </Button>
+            </form>
+            <Link to='/signup'>SignUp</Link>
+
+        </div>
+    
+        </Container>
+    </React.Fragment>
   );
 }
 

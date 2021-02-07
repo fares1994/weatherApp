@@ -85,7 +85,13 @@ const UserPage = () =>{
             </form>
             {
                 Object.keys(data).length === 0? <div>please select a place</div> 
-                :<WeatherDetails/>
+                :<WeatherDetails
+                   place={data.placeName}
+                   time={data.observationTime}
+                   temp={data.tempF}
+                   state={data.weatherState}
+                   day={data.day}
+                />
             }
        </div>
    )

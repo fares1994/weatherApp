@@ -1,3 +1,7 @@
 .userpage-container {
   margin:3px
 }
+.MuiSvgIcon-root{
+    width: 10rem !important;
+    height:10rem !important
+}

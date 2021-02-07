@@ -2,9 +2,9 @@ import React,{useState} from 'react';
 import './user.style.css'
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import Button from '@material-ui/core/Button';
 import ErrorModal from '../components/ui-elements/ErrorModal';
+import WeatherDetails from '../components/weather-details/weather-details';
 const DUMMY_WEATHER_DATA = {
     weatherState:'sunny',
     tempF: 70, 
@@ -40,7 +40,7 @@ const UserPage = () =>{
     const classes = useStyles();
     const [place,setPlace] = useState('')
     const [error,setError] = useState(false)
-    const [data,setData] = useState(null)
+    const [data,setData] = useState({})
     const inputHandler = event =>{
         setPlace(event)
     }
@@ -83,7 +83,10 @@ const UserPage = () =>{
                     Search
              </Button>
             </form>
-             
+            {
+                Object.keys(data).length === 0? <div>please select a place</div> 
+                :<WeatherDetails/>
+            }
        </div>
    )
 }

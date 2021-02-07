@@ -60,6 +60,7 @@ const submitHandler = event =>{
        return setError('please complete form')
     }
     //ready to send (form)
+    //remember to add the error modal and isloading modal
     auth.login(DUMMY_USER.username,DUMMY_USER.token)
   }
   return (

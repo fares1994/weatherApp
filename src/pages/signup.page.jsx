@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -32,7 +32,22 @@ const useStyles = makeStyles((theme) => ({
 
 const SignUp = () =>{
   const classes = useStyles();
-
+  const [form,setForm] = useState({
+    username:'',
+    password:''
+})
+  const formHandler = event =>{
+    const input = event.target
+    setForm({...form,[input.name]:input.value})
+   }
+   const submitHandler = event =>{
+    event.preventDefault();
+    console.log(event);
+    if(form.username.length===0||form.password.length===0){
+        alert('please complete form')
+    }
+    //ready to send (form)
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -43,7 +58,8 @@ const SignUp = () =>{
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate
+        onSubmit={submitHandler}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -54,6 +70,7 @@ const SignUp = () =>{
             name="username"
             autoComplete="username"
             autoFocus
+            onChange={formHandler}
           />
           <TextField
             variant="outlined"
@@ -65,6 +82,7 @@ const SignUp = () =>{
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={formHandler}
           />
 
           <Button
